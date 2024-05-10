@@ -16,6 +16,7 @@ interface ReactImageEditorProps {
   };
   src: string;
   getStage?: (stage: any) => void;
+  ok?: () => void;
   defaultPluginName?: string;
   crossOrigin?: string;
 }
@@ -23,13 +24,16 @@ interface ReactImageEditorProps {
 export default function ReactImageEditor(props: ReactImageEditorProps) {
   const [imageObj, setImageObj] = useState<HTMLImageElement | null>(null)
 
-
   const pluginFactory = new PluginFactory()
   const plugins = [...pluginFactory.plugins, ...props.plugins!]
   let defaultPlugin = null
   let defaultParamValue = {}
-  for(let i = 0; i < plugins.length; i++) {
-    if (props.defaultPluginName && props.toolbar && plugins[i].name === props.defaultPluginName) {
+  for (let i = 0; i < plugins.length; i++) {
+    if (
+      props.defaultPluginName &&
+      props.toolbar &&
+      plugins[i].name === props.defaultPluginName
+    ) {
       defaultPlugin = plugins[i]
 
       if (defaultPlugin.defaultParamValue) {
@@ -40,12 +44,16 @@ export default function ReactImageEditor(props: ReactImageEditorProps) {
     }
   }
 
-  const [currentPlugin, setCurrentPlugin] = useState<Plugin | null>(defaultPlugin)
-  const [paramValue, setParamValue] = useState<PluginParamValue>(defaultParamValue)
+  const [currentPlugin, setCurrentPlugin] = useState<Plugin | null>(
+    defaultPlugin,
+  )
+  const [paramValue, setParamValue] = useState<PluginParamValue>(
+    defaultParamValue,
+  )
 
   // 生成默认 toolbarItemConfig
   const config: any = {}
-  plugins.map(plugin => {
+  plugins.map((plugin) => {
     if (plugin.name === 'repeal') {
       config[plugin.name] = { disable: true }
     } else {
@@ -84,6 +92,11 @@ export default function ReactImageEditor(props: ReactImageEditorProps) {
     setToolbarItemConfig(config)
   }
 
+  function ok() {
+    console.log('111')
+    props.ok?.()
+  }
+
   const style = {
     width: props.width + 'px',
     height: props.height + 'px',
@@ -103,21 +116,20 @@ export default function ReactImageEditor(props: ReactImageEditorProps) {
         handlePluginParamValueChange,
         toolbarItemConfig,
         updateToolbarItemConfig,
+        ok,
       }}
     >
       <div className="react-img-editor" style={style}>
-        {
-          imageObj ? (
-            <>
-              <Palette
-                height={props.height! - 42}
-                imageObj={imageObj}
-                getStage={props.getStage}
-              />
-              <Toolbar />
-            </>
-          ) : null
-        }
+        {imageObj ? (
+          <>
+            <Palette
+              height={props.height! - 42}
+              imageObj={imageObj}
+              getStage={props.getStage}
+            />
+            <Toolbar />
+          </>
+        ) : null}
       </div>
     </EditorContext.Provider>
   )
@@ -129,6 +141,18 @@ ReactImageEditor.defaultProps = {
   style: {},
   plugins: [],
   toolbar: {
-    items: ['pen', 'eraser', 'arrow', 'rect', 'circle', 'mosaic', 'text', '|', 'repeal', 'download', 'crop'],
+    items: [
+      'pen',
+      'eraser',
+      'arrow',
+      'rect',
+      'circle',
+      'mosaic',
+      'text',
+      '|',
+      'repeal',
+      'download',
+      'crop',
+    ],
   },
 } as Partial<ReactImageEditorProps>

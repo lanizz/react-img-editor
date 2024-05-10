@@ -29,9 +29,15 @@ export default function Toolbar() {
       return (
         <span
           key={plugin.name}
-          className={`${prefixCls}-toolbar-icon ${isActivated ? 'activated' : ''} ${isDisabled ? 'disabled' : ''}`}
+          className={`${prefixCls}-toolbar-icon ${
+            isActivated ? 'activated' : ''
+          } ${isDisabled ? 'disabled' : ''}`}
         >
-          <i title={plugin.title} className={plugin.iconfont} onClick={() => handlePluginChange(plugin)} />
+          <i
+            title={plugin.title}
+            className={plugin.iconfont}
+            onClick={() => handlePluginChange(plugin)}
+          />
         </span>
       )
     }
@@ -40,22 +46,28 @@ export default function Toolbar() {
       <Tooltip
         key={plugin.name}
         placement="bottom"
-        overlay={(
+        overlay={
           <ParamSetting
             paramNames={paramNames}
             paramValue={paramValue}
             onChange={handlePluginParamValueChange}
           />
-        )}
+        }
         visible={isActivated}
         overlayClassName={`${prefixCls}-tooltip`}
         arrowContent={<div className="rc-tooltip-arrow-inner"></div>}
       >
         <span
           key={plugin.name}
-          className={`${prefixCls}-toolbar-icon ${isActivated ? 'activated' : ''} ${isDisabled ? 'disabled' : ''}`}
+          className={`${prefixCls}-toolbar-icon ${
+            isActivated ? 'activated' : ''
+          } ${isDisabled ? 'disabled' : ''}`}
         >
-          <i title={plugin.title} className={plugin.iconfont} onClick={() => handlePluginChange(plugin)} />
+          <i
+            title={plugin.title}
+            className={plugin.iconfont}
+            onClick={() => handlePluginChange(plugin)}
+          />
         </span>
       </Tooltip>
     )
@@ -63,17 +75,16 @@ export default function Toolbar() {
 
   return (
     <div className={`${prefixCls}-toolbar`} style={style}>
-      {
-        toolbar.items.map(item => {
-          if (item === '|') return <span className={`${prefixCls}-toolbar-separator`} />
-          for(let i = 0; i < plugins.length; i++) {
-            if (plugins[i].name === item) {
-              return renderPlugin(plugins[i])
-            }
+      {toolbar.items.map((item) => {
+        if (item === '|')
+          return <span className={`${prefixCls}-toolbar-separator`} />
+        for (let i = 0; i < plugins.length; i++) {
+          if (plugins[i].name === item) {
+            return renderPlugin(plugins[i])
           }
-          return null
-        })
-      }
+        }
+        return null
+      })}
     </div>
   )
 }

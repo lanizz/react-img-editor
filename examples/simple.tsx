@@ -11,8 +11,10 @@ function Example() {
   }
 
   function downloadImage() {
-    const canvas = stageRef.current.clearAndToCanvas({ pixelRatio: stageRef.current._pixelRatio })
-    canvas.toBlob(function(blob: any) {
+    const canvas = stageRef.current.clearAndToCanvas({
+      pixelRatio: stageRef.current._pixelRatio,
+    })
+    canvas.toBlob(function (blob: any) {
       const link = document.createElement('a')
       link.download = ''
       link.href = URL.createObjectURL(blob)
@@ -20,7 +22,7 @@ function Example() {
     }, 'image/jpeg')
   }
 
-  const image1 = 'https://pro-cos-public.seewo.com/seewo-school/7614707e9bfe42f1bfa3bf7fb9d71844'
+  const image1 = 'https://img.hmcloud.com.cn/zz/1531476125905649.jpg'
   // const image2 = 'https://cvte-dev-public.seewo.com/faq-service-test/4db524ec93324794b983bf7cd78b2ae1'
   // const image3 = 'https://cvte-dev-public.seewo.com/faq-service-test/bfdcc5337dfb43ce823a4c9743aba99c'
   // const image4 = 'https://cvte-dev-public.seewo.com/faq-service-test/bc87ceeb7b1a473da41e025e656af966'
@@ -34,9 +36,27 @@ function Example() {
         getStage={setStage}
         defaultPluginName="text"
         crossOrigin="anonymous"
+        ok={() => {
+          console.log('点了ok')
+        }}
         toolbar={{
-          items: ['pen', 'eraser', 'arrow', 'rect', 'circle', 'mosaic', 'text', '|', 'repeal', 'download', 'crop',
-            '|', 'zoomIn', 'zoomOut'],
+          items: [
+            'pen',
+            'eraser',
+            'arrow',
+            'rect',
+            'circle',
+            'mosaic',
+            'text',
+            '|',
+            'repeal',
+            'download',
+            'crop',
+            '|',
+            'zoomIn',
+            'zoomOut',
+            'ok',
+          ],
         }}
       />
       <div style={{ marginTop: '50px' }}>

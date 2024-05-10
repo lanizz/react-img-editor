@@ -1,7 +1,7 @@
 import Konva from 'konva'
 import PubSub from '../common/PubSub'
 import React from 'react'
-import { EditorContextProps,  withEditorContext } from './EditorContext'
+import { EditorContextProps, withEditorContext } from './EditorContext'
 import { DrawEventParams } from '../common/type'
 import { prefixCls } from '../common/constants'
 import { uuid } from '../common/utils'
@@ -13,17 +13,17 @@ interface PaletteProps extends EditorContextProps {
 }
 
 class Palette extends React.Component<PaletteProps> {
-  containerId = prefixCls + uuid()
-  canvasWidth: number
-  canvasHeight: number
-  pixelRatio: number
-  stage: Konva.Stage | null = null
-  imageLayer: Konva.Layer | null = null
-  drawLayer: Konva.Layer | null = null
-  imageElement: Konva.Image | null = null
-  imageData: ImageData | null = null
-  historyStack: any[] = []
-  pubSub: InstanceType<typeof PubSub>
+  containerId = prefixCls + uuid();
+  canvasWidth: number;
+  canvasHeight: number;
+  pixelRatio: number;
+  stage: Konva.Stage | null = null;
+  imageLayer: Konva.Layer | null = null;
+  drawLayer: Konva.Layer | null = null;
+  imageElement: Konva.Image | null = null;
+  imageData: ImageData | null = null;
+  historyStack: any[] = [];
+  pubSub: InstanceType<typeof PubSub>;
 
   constructor(props: PaletteProps) {
     super(props)
@@ -34,7 +34,7 @@ class Palette extends React.Component<PaletteProps> {
     const imageNatureHeight = imageObj.naturalHeight
     const wRatio = containerWidth / imageNatureWidth
     const hRatio = props.height / imageNatureHeight
-    const scaleRatio  = Math.min (wRatio, hRatio, 1)
+    const scaleRatio = Math.min(wRatio, hRatio, 1)
 
     this.canvasWidth = Math.round(imageNatureWidth * scaleRatio)
     this.canvasHeight = Math.round(imageNatureHeight * scaleRatio)
@@ -79,7 +79,9 @@ class Palette extends React.Component<PaletteProps> {
 
   componentWillUnmount() {
     const { currentPlugin } = this.props
-    currentPlugin && currentPlugin.onLeave && currentPlugin.onLeave(this.getDrawEventParams(null))
+    currentPlugin &&
+      currentPlugin.onLeave &&
+      currentPlugin.onLeave(this.getDrawEventParams(null))
   }
 
   init = () => {
@@ -107,12 +109,16 @@ class Palette extends React.Component<PaletteProps> {
     this.imageLayer.add(img)
     this.imageLayer.draw()
 
-    this.imageData = this.generateImageData(imageObj, this.canvasWidth, this.canvasHeight)
+    this.imageData = this.generateImageData(
+      imageObj,
+      this.canvasWidth,
+      this.canvasHeight,
+    )
 
     this.drawLayer = new Konva.Layer()
     this.stage.add(this.drawLayer)
     this.bindEvents()
-  }
+  };
 
   // 裁剪等操作执行后需要重新初始化
   reload = (imgObj: any, width: number, height: number) => {
@@ -147,7 +153,7 @@ class Palette extends React.Component<PaletteProps> {
     this.drawLayer = new Konva.Layer()
     this.stage.add(this.drawLayer)
     this.bindEvents()
-  }
+  };
 
   resetStage = (stage: Konva.Stage) => {
     // @ts-ignore
@@ -155,11 +161,13 @@ class Palette extends React.Component<PaletteProps> {
     // @ts-ignore
     stage.clearAndToCanvas = (config: any) => {
       const { currentPlugin } = this.props
-      currentPlugin && currentPlugin.onLeave && currentPlugin.onLeave(this.getDrawEventParams(null))
+      currentPlugin &&
+        currentPlugin.onLeave &&
+        currentPlugin.onLeave(this.getDrawEventParams(null))
       return stage.toCanvas(config)
     }
     return stage
-  }
+  };
 
   bindEvents = () => {
     if (!this.stage || !this.drawLayer) return
@@ -174,11 +182,17 @@ class Palette extends React.Component<PaletteProps> {
         const name = e.target.name()
         for (let i = 0; i < plugins.length; i++) {
           // 点击具体图形，会切到对应的插件去
-          if (plugins[i].shapeName && plugins[i].shapeName === name
-            && (!currentPlugin || !currentPlugin.shapeName || name !== currentPlugin.shapeName)) {
+          if (
+            plugins[i].shapeName &&
+            plugins[i].shapeName === name &&
+            (!currentPlugin ||
+              !currentPlugin.shapeName ||
+              name !== currentPlugin.shapeName)
+          ) {
             ((event: any) => {
               setTimeout(() => {
-                plugins[i].onClick && plugins[i].onClick!(this.getDrawEventParams(event))
+                plugins[i].onClick &&
+                  plugins[i].onClick!(this.getDrawEventParams(event))
               })
             })(e)
             handlePluginChange(plugins[i])
@@ -209,7 +223,7 @@ class Palette extends React.Component<PaletteProps> {
         currentPlugin.onDrawEnd(this.getDrawEventParams(e))
       }
     })
-  }
+  };
 
   removeEvents = () => {
     if (!this.stage) return
@@ -218,7 +232,7 @@ class Palette extends React.Component<PaletteProps> {
     this.stage.off('mousedown touchstart')
     this.stage.off('mousemove touchmove')
     this.stage.off('mouseup touchend')
-  }
+  };
 
   subHistoryStack = () => {
     this.pubSub.sub('PUSH_HISTORY', (_: any, node: any) => {
@@ -245,7 +259,7 @@ class Palette extends React.Component<PaletteProps> {
         }
       }
     })
-  }
+  };
 
   // 主要用于在马赛克时，进行图片像素处理
   generateImageData = (imgObj: any, width: number, height: number) => {
@@ -255,7 +269,7 @@ class Palette extends React.Component<PaletteProps> {
     const ctx = canvas.getContext('2d')
     ctx!.drawImage(imgObj, 0, 0, width, height)
     return ctx!.getImageData(0, 0, width, height)
-  }
+  };
 
   // 生命周期的统一参数生成函数
   getDrawEventParams = (e: any) => {
@@ -282,10 +296,11 @@ class Palette extends React.Component<PaletteProps> {
       handlePluginParamValueChange: props.handlePluginParamValueChange,
       toolbarItemConfig: props.toolbarItemConfig,
       updateToolbarItemConfig: props.updateToolbarItemConfig,
+      ok: props.ok,
     }
 
     return drawEventParams
-  }
+  };
 
   render() {
     const { height } = this.props

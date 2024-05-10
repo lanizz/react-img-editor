@@ -13,8 +13,14 @@ export interface DrawEventParams extends EditorContextProps {
   historyStack: any[];
   pixelRatio: number;
   pubSub: InstanceType<typeof PubSub>;
+  ok: () => void;
 }
-export type PluginParamName = 'strokeWidth' | 'color' | 'fontSize' | 'lineType' | 'zoomRatio'
+export type PluginParamName =
+  | 'strokeWidth'
+  | 'color'
+  | 'fontSize'
+  | 'lineType'
+  | 'zoomRatio';
 export interface PluginParamValue {
   strokeWidth?: number;
   color?: string;
